@@ -1,0 +1,9 @@
+[
+    {
+        "id": "key",
+        "type": "text",
+        "label": { "en": "Encryption key" },
+        "value": "7ce4d5bd-899d-4682-ac38-40332c07e5f1",
+        "hint": { "en": "As obtained by the instructions." }
+      }
+]
