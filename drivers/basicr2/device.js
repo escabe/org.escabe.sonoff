@@ -6,7 +6,7 @@ const { Device } = require('homey');
 
 const axios = require('axios');
 
-class MyDevice extends Device {
+class BasicR2Device extends Device {
 
   /**
    * onInit is called when the device is initialized.
@@ -45,7 +45,7 @@ class MyDevice extends Device {
   }
 
   async onInit() {
-    this.log('MyDevice has been initialized');
+    this.log('BasicR2Device has been initialized');
     this.id = this.getData().id;
     const key = this.getSetting('key');
     if (key) {
@@ -81,7 +81,7 @@ class MyDevice extends Device {
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    this.log('MyDevice has been added');
+    this.log('BasicR2Device has been added');
   }
 
   /**
@@ -93,7 +93,7 @@ class MyDevice extends Device {
    * @returns {Promise<string|void>} return a custom message that will be displayed
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.log('MyDevice settings where changed');
+    this.log('BasicR2Device settings where changed');
     if (changedKeys.includes('key')) {
       this.setKey(newSettings.key);
     }
@@ -105,14 +105,14 @@ class MyDevice extends Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    this.log('MyDevice was renamed');
+    this.log('BasicR2Device was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    this.log('MyDevice has been deleted');
+    this.log('BasicR2Device has been deleted');
   }
 
   onDiscoveryResult(discoveryResult) {
@@ -128,7 +128,7 @@ class MyDevice extends Device {
     this.port = discoveryResult.port;
     this.homey.app.emit('eweLinkmDNSUpdate',discoveryResult.txt);
     
-  //  this.api = new MyDeviceAPI(discoveryResult.address);
+  //  this.api = new BasicR2DeviceAPI(discoveryResult.address);
   //  await this.api.connect(); // When this throws, the device will become unavailable.
   }
 
@@ -147,4 +147,4 @@ class MyDevice extends Device {
 
 }
 
-module.exports = MyDevice;
+module.exports = BasicR2Device;

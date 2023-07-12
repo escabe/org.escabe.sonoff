@@ -2,7 +2,7 @@
   "name": {
     "en": "BASICR2"
   },
-  "class": "light",
+  "class": "socket",
   "capabilities": [
     "onoff"
   ],
@@ -28,5 +28,6 @@
       "id": "add_my_devices",
       "template": "add_devices"
     }
+
   ]
 }

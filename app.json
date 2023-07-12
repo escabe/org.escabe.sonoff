@@ -32,7 +32,7 @@
       "name": {
         "en": "BASICR2"
       },
-      "class": "light",
+      "class": "socket",
       "capabilities": [
         "onoff"
       ],

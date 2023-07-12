@@ -3,7 +3,7 @@
 const Homey = require('homey');
 const mdns = require('multicast-dns')()
 
-class MyApp extends Homey.App {
+class SonoffDIYBasicApp extends Homey.App {
 
 
   seqMap = {};
@@ -32,7 +32,7 @@ class MyApp extends Homey.App {
   }
 
   async onInit() {
-    this.log('MyApp has been initialized');
+    this.log('SonoffDIYBasicApp has been initialized');
 
     mdns.on('response', this.handleDNS.bind(this));
     
@@ -40,4 +40,4 @@ class MyApp extends Homey.App {
 
 }
 
-module.exports = MyApp;
+module.exports = SonoffDIYBasicApp;

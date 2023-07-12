@@ -2,13 +2,13 @@
 
 const { Driver } = require('homey');
 
-class MyDriver extends Driver {
+class BasicR2Driver extends Driver {
 
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log('MyDriver has been initialized');
+    this.log('BasicR2Driver has been initialized');
   }
 
   /**
@@ -33,4 +33,4 @@ class MyDriver extends Driver {
 
 }
 
-module.exports = MyDriver;
+module.exports = BasicR2Driver;
