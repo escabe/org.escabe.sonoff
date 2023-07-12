@@ -21,8 +21,9 @@ class MyApp extends Homey.App {
             const i = d.indexOf('=');
             r[d.slice(0,i)] = d.slice(i+1);
           }
-          if (r.seq !== this.seqMap[r.id]) {
-            this.seqMap[r.id] = r.seq;
+          const s = parseInt(r.seq) - this.seqMap[r.id];
+          if (isNaN(s) || s > 0 || s < -1000) {
+            this.seqMap[r.id] = parseInt(r.seq);
             this.emit('eweLinkmDNSUpdate',r);
           }
         }
