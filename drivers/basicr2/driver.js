@@ -19,10 +19,9 @@ class MyDriver extends Driver {
   async onPairListDevices() {
     const discoveryStrategy = this.getDiscoveryStrategy();
     const discoveryResults = discoveryStrategy.getDiscoveryResults();
-
     const devices = Object.values(discoveryResults).map(discoveryResult => {
       return {
-        name: discoveryResult.txt.name,
+        name: discoveryResult.name,
         data: {
           id: discoveryResult.id,
         },

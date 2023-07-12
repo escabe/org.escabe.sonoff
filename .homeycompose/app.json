@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
+  "brandColor": "#47abb7",
   "platforms": [
     "local"
   ],
   "name": {
-    "en": "EscAbe Sonoff"
+    "en": "Sonoff DIY Basic"
   },
   "description": {
-    "en": "Adds support for MyBrand devices."
+    "en": "Adds support for Snoff devices with basic DIY support."
   },
   "category": [
     "lights"
