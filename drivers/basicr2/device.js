@@ -3,8 +3,6 @@
 const crypto = require('crypto');
 
 const { Device } = require('homey');
-const aesjs = require('aes-js');
-const md5 = require('md5');
 
 const axios = require('axios');
 
@@ -18,21 +16,32 @@ class MyDevice extends Device {
   id = null;
   ip = null;
   port = null; 
+  sequence = 0;
 
   encrypt(data) {
     const iv = crypto.randomBytes(16);
-    const aesCbc = new aesjs.ModeOfOperation.cbc(this.key, iv);
-    let textBytes = aesjs.utils.utf8.toBytes(JSON.stringify(data));
-    textBytes = aesjs.padding.pkcs7.pad(textBytes);
-    const encryptedBytes = aesCbc.encrypt(textBytes);
-    return { data: Buffer.from(encryptedBytes).toString('base64'), iv: Buffer.from(iv).toString('base64') }
+    const aesCbc = crypto.createCipheriv('aes-128-cbc', this.key, iv);
+    const encrypted = Buffer.concat([
+      aesCbc.update(JSON.stringify(data),'utf-8'),
+      aesCbc.final()
+    ]);
+    return { data: encrypted.toString('base64'), iv: iv.toString('base64') }
 }
 
   decrypt(data,iv) {
-    const aesCbc = new aesjs.ModeOfOperation.cbc(this.key, Buffer.from(iv,'base64'));
-    const encryptedBytes = Buffer.from(data,'base64');
-    const textBytes = aesCbc.decrypt(encryptedBytes);
-    return aesjs.utils.utf8.fromBytes(aesjs.padding.pkcs7.strip(textBytes));
+    iv = Buffer.from(iv,'base64');
+    const aesCbc = crypto.createDecipheriv('aes-128-cbc', this.key, iv);
+    const decrypted = Buffer.concat([
+      aesCbc.update(data,'base64'),
+      aesCbc.final()
+    ]);
+    return decrypted.toString('utf-8');
+  }
+
+  setKey(key) {
+    const md5 = crypto.createHash('md5');
+    md5.update(Buffer.from(key));
+    this.key = md5.digest();
   }
 
   async onInit() {
@@ -40,7 +49,7 @@ class MyDevice extends Device {
     this.id = this.getData().id;
     const key = this.getSetting('key');
     if (key) {
-      this.key = md5(key,{asBytes:true});
+      this.setKey(key);
     }
 
     this.homey.app.on('eweLinkmDNSUpdate',(data)=>{
@@ -50,17 +59,17 @@ class MyDevice extends Device {
           this.setCapabilityValue('onoff',info.switch === 'on');
 
         } catch(ex) {
-
+          this.log(ex);
         }
       }  
     });
 
     this.registerCapabilityListener('onoff',async (val)=>{
       const payload = {
-        "sequence": "0",
+        "sequence": (this.sequence++).toString(),
         "encrypt": true,
         "deviceid": "10018bb8f1",
-        "selfApikey": "123",
+        "selfApikey": "31415",
         ... this.encrypt({switch: val ? 'on':'off'})
       };
       axios.post(`http://${this.ip}:${this.port}/zeroconf/switch`,payload);
@@ -85,6 +94,9 @@ class MyDevice extends Device {
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
     this.log('MyDevice settings where changed');
+    if (changedKeys.includes('key')) {
+      this.setKey(newSettings.key);
+    }
   }
 
   /**
